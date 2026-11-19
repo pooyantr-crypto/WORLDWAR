@@ -1,19 +1,33 @@
+const corsHeaders = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, OPTIONS",
+  "access-control-allow-headers": "content-type, authorization",
+  "access-control-max-age": "86400",
+};
+
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status,
-  headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
+  headers: { ...corsHeaders, "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
 });
+const withCors = (response) => {
+  if (response.status === 101) return response;
+  const headers = new Headers(response.headers);
+  for (const [key, value] of Object.entries(corsHeaders)) headers.set(key, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+};
 const safeText = (value, fallback, max) =>
   typeof value === "string" ? value.trim().slice(0, max) || fallback : fallback;
 
 export default {
   async fetch(request, env) {
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
     const url = new URL(request.url);
     if (url.pathname === "/health") {
       return json({ ok: true, service: "WORLDWAR", stage: "multiplayer-backend-foundation" });
     }
     if (url.pathname === "/api/rooms" && request.method === "GET") {
       const registry = env.WORLDWAR_REGISTRY.get(env.WORLDWAR_REGISTRY.idFromName("public"));
-      return registry.fetch("https://registry/list");
+      return withCors(await registry.fetch("https://registry/list"));
     }
     if (url.pathname === "/api/rooms" && request.method === "POST") {
       let input;
@@ -40,7 +54,7 @@ export default {
     const [, id, action] = match;
     const room = env.WORLDWAR_ROOMS.get(env.WORLDWAR_ROOMS.idFromName(id));
     if (action === "ws") return room.fetch(request);
-    if (action === "state" && request.method === "GET") return room.fetch("https://room/state");
+    if (action === "state" && request.method === "GET") return withCors(await room.fetch("https://room/state"));
     return json({ error: "Not found" }, 404);
   },
 };
