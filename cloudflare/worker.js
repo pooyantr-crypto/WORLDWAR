@@ -49,7 +49,7 @@ export default {
       if (!response.ok) return json({ error: "Could not register room" }, 503);
       return json({ room, websocket: `/api/rooms/${id}/ws` }, 201);
     }
-    const match = url.pathname.match(/^\\/api\\/rooms\\/([a-f0-9]{12})(?:\\/(ws|state))?$/);
+    const match = url.pathname.match(/^\/api\/rooms\/([a-f0-9]{12})(?:\/(ws|state))?$/);
     if (!match) return json({ error: "Not found" }, 404);
     const [, id, action] = match;
     const room = env.WORLDWAR_ROOMS.get(env.WORLDWAR_ROOMS.idFromName(id));
