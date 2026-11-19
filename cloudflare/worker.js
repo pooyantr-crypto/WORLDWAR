@@ -48,7 +48,17 @@ export default {
     if (url.pathname === "/health") return json({ ok: true, service: "WORLDWAR", stage: "playable-multiplayer-prototype" });
     if (url.pathname === "/api/rooms" && request.method === "GET") {
       const registry = env.WORLDWAR_REGISTRY.get(env.WORLDWAR_REGISTRY.idFromName("public"));
-      return withCors(await registry.fetch("https://registry/list"));
+      const listed = await registry.fetch("https://registry/list");
+      const data = await listed.json();
+      const rooms = await Promise.all((data.rooms || []).map(async (entry) => {
+        const room = env.WORLDWAR_ROOMS.get(env.WORLDWAR_ROOMS.idFromName(entry.id));
+        try {
+          const response = await room.fetch("https://room/state");
+          const state = await response.json();
+          return { ...entry, players: Object.keys(state.players || {}).length };
+        } catch { return entry; }
+      }));
+      return json({ rooms });
     }
     if (url.pathname === "/api/rooms" && request.method === "POST") {
       let input;
@@ -122,9 +132,15 @@ export class GameRoom {
       attachment.playerId = playerId; socket.serializeAttachment(attachment);
       let cells = await this.state.storage.get("cells");
       if (!cells) { cells = Array(96).fill(null); await this.state.storage.put("cells",cells); }
-      const start = Object.keys(players).length - 1;
-      const seed = [0,11,84,95,5,90,48,47][start];
-      cells[seed] = playerId;
+      const start = (await this.state.storage.get("nextSlot")) || 0;
+      const seed = [0,11,84,95,5,90,48,47][start % 8];
+      await this.state.storage.put("nextSlot", start + 1);
+      if (cells[seed] !== null) {
+        const fallback = cells.findIndex((owner) => owner === null);
+        if (fallback >= 0) cells[fallback] = playerId;
+      } else {
+        cells[seed] = playerId;
+      }
       await this.state.storage.put("players",players); await this.state.storage.put("cells",cells);
       this.broadcastState();
       return;
