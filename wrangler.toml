@@ -1,0 +1,16 @@
+name = "worldwar-online"
+main = "cloudflare/worker.js"
+compatibility_date = "2026-11-19"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "WORLDWAR_ROOMS"
+class_name = "GameRoom"
+
+[[durable_objects.bindings]]
+name = "WORLDWAR_REGISTRY"
+class_name = "RoomRegistry"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["GameRoom", "RoomRegistry"]
