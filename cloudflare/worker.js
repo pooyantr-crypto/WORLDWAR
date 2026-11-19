@@ -16,7 +16,7 @@ const withCors = (response) => {
 const safeText = (value, fallback, max) =>
   typeof value === "string" ? value.trim().replace(/[<>]/g, "").slice(0, max) || fallback : fallback;
 
-const GAME_HTML = String.raw\`<!doctype html>
+const GAME_HTML = String.raw`<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101827"><title>WORLDWAR — Online Strategy</title>
 <style>
 :root{color-scheme:dark;font-family:Inter,system-ui,Arial,sans-serif;background:#0b1220;color:#e8eef9}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1a2c48,#0b1220 65%);min-height:100vh}.wrap{max-width:1100px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-size:30px;font-weight:900;letter-spacing:2px;color:#8fc5ff}.tag{color:#9fb0c9;font-size:13px}.panel{background:#131f31;border:1px solid #2a3d58;border-radius:16px;padding:18px;margin:18px 0;box-shadow:0 12px 32px #0004}.row{display:flex;gap:10px;flex-wrap:wrap}input,select,button{font:inherit;border-radius:10px;padding:11px 13px;border:1px solid #344b69;background:#0c1727;color:#edf4ff}input{min-width:0;flex:1}button{background:#2468b5;border-color:#347dce;font-weight:700;cursor:pointer}button:hover{filter:brightness(1.15)}button:disabled{opacity:.5;cursor:not-allowed}.muted{color:#9fb0c9}.rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}.room{background:#0c1727;border:1px solid #2b405c;padding:14px;border-radius:12px}.room strong{display:block;margin-bottom:6px}.game{display:none}.hud{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.map{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;max-width:800px;margin:auto;background:#0b1422;padding:8px;border-radius:12px}.cell{aspect-ratio:1;border:1px solid #ffffff18;border-radius:4px;background:#26384b;cursor:pointer;min-width:0}.cell:focus{outline:2px solid white}.cell.mine{box-shadow:inset 0 0 0 2px #fff}.notice{min-height:24px;color:#b8d6ff;margin-top:10px}.foot{font-size:12px;color:#8092aa;text-align:center;margin:24px 0}@media(max-width:600px){.wrap{padding:13px}.logo{font-size:24px}.panel{padding:13px}.cell{border-radius:2px;gap:1px}.map{gap:2px;padding:5px}}
@@ -36,7 +36,7 @@ function render(){if(!state)return;const root=el("map");root.replaceChildren();l
 function send(data){if(socket?.readyState===WebSocket.OPEN)socket.send(JSON.stringify(data))}
 function leave(){if(socket)socket.close();socket=null;roomId=null;state=null;el("game").style.display="none";el("lobby").style.display="block";setOnline(false);loadRooms()}
 el("create").onclick=createRoom;el("leave").onclick=leave;loadRooms();setInterval(()=>{if(!roomId)loadRooms()},8000);
-</script></body></html>\`;
+</script></body></html>`;
 
 export default {
   async fetch(request, env) {
