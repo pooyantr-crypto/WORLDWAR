@@ -1,5 +1,5 @@
 name = "worldwar-online"
-main = "cloudflare/worker.ts"
+main = "cloudflare/worker.js"
 compatibility_date = "2026-11-19"
 workers_dev = true
 
@@ -13,4 +13,4 @@ class_name = "RoomRegistry"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["GameRoom", "RoomRegistry"]
+new_sqlite_classes = ["GameRoom", "RoomRegistry"]
