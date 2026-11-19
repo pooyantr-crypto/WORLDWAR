@@ -1,3 +1,15 @@
+# WORLDWAR — Community fork of OpenFront
+
+WORLDWAR is a community-operated fork based on the open-source OpenFrontIO project. It is not an official OpenFront service and is not affiliated with OpenFront Inc. The upstream game engine and its original notices are retained; the visible product title is customized for this fork.
+
+**Project status:** the upstream game source is present in this repository. A working public deployment still requires a compatible Node.js game-server host and its runtime configuration. The separate Cloudflare Worker prototype is not the full game server and must not be presented as a complete deployment.
+
+**Free-hosting requirement:** this project is being prepared with a zero-paid-services target. No paid hosting, billing, premium asset, or paid add-on should be enabled without the owner's explicit approval. Free hosting providers may impose sleep, compute, bandwidth, or storage limits, so permanent 24/7 availability cannot be promised without verifying the provider's current free tier.
+
+The upstream source is licensed under AGPL-3.0. Open assets in `resources/` are licensed under CC BY-SA 4.0; files in `proprietary/` are not open-licensed and must not be redistributed or used in WORLDWAR. Preserve the upstream copyright and attribution notices. See [LICENSING.md](LICENSING.md), [LICENSE](LICENSE), and [LICENSE-ASSETS](LICENSE-ASSETS).
+
+---
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="proprietary/images/OpenFrontLogoDark.svg">
